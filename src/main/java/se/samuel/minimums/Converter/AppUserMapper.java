@@ -9,6 +9,7 @@ import se.samuel.minimums.Models.AppUser;
 
 @Component
 public class AppUserMapper {
+    //test
 
     @Autowired
     private ModelMapper modelMapper;
