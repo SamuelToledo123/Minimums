@@ -1,8 +1,10 @@
 spring:
+  config:
+    import: "optional:file:.env[.properties]"
   datasource:
-    url: jdbc:postgresql://localhost:5433/minimums_data
-    username: postgres
-    password: 210628
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

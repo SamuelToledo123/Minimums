@@ -25,4 +25,8 @@ public class Food {
     @JoinColumn(name = "recipe_id")
     private Recipes recipe;
 
+    @ManyToOne
+    @JoinColumn(name = "shopping_list_id")
+    private ShoppingList shoppingList;
+
 }
