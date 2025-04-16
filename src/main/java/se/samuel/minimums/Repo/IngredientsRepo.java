@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import se.samuel.minimums.Models.Ingredients;
 
 @Repository
-public interface FoodRepo extends JpaRepository<Ingredients, Long> {
+public interface IngredientsRepo extends JpaRepository<Ingredients, Long> {
 }
