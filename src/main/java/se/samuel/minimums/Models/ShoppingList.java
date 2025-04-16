@@ -29,6 +29,6 @@ public class ShoppingList {
     private MealPlan mealPlan;
 
     @OneToMany(mappedBy = "shoppingList", cascade = CascadeType.ALL)
-    private List<Food> foods;
+    private List<Ingredients> ingredients;
 
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Builder
-public class Food {
+public class Ingredients {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
