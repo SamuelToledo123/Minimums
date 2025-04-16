@@ -25,7 +25,7 @@ public class Recipes {
     private int toAge;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
-    private List<Food> foods;
+    private List<Ingredients> ingredients;
 
     @ManyToOne
     @JoinColumn(name = "mealplan_id")
