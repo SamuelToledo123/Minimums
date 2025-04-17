@@ -60,6 +60,17 @@ class AppUserServiceTest {
     }
 
     @Test
+    void getUserByEmail_returnsUser() {
+        when(repo.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+
+        Optional<AppUser> result = service.getUserByEmail("test@example.com");
+
+        assertTrue(result.isPresent());
+        assertEquals("Test User", result.get().getName());
+        verify(repo).findByEmail("test@example.com");
+    }
+
+    @Test
     void getUserById_returnsOptionalUser() {
         when(repo.findById(1L)).thenReturn(Optional.of(user));
 
