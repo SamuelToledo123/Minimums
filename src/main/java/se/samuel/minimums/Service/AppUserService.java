@@ -2,7 +2,7 @@ package se.samuel.minimums.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import se.samuel.minimums.Convert.AppUserMapper;
+import se.samuel.minimums.Converter.AppUserMapper;
 import se.samuel.minimums.Dto.AppUserDto;
 import se.samuel.minimums.Models.AppUser;
 import se.samuel.minimums.Repo.AppUserRepo;

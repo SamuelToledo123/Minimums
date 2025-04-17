@@ -1,4 +1,4 @@
-package se.samuel.minimums.Convert;
+package se.samuel.minimums.Converter;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
