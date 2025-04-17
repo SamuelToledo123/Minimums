@@ -26,6 +26,6 @@ public class AppUser {
     private List<MealPlan> mealPlans;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<ShoppingList> shoppinglist;
+    private List<ShoppingList> shoppingList;
 
 }

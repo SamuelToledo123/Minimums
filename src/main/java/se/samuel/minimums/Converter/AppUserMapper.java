@@ -13,11 +13,12 @@ public class AppUserMapper {
     @Autowired
     private ModelMapper modelMapper;
 
-    public AppUserDto convertToAppUserDto(AppUser appUser) {
+
+    public AppUserDto AppUserToAppUserDto(AppUser appUser) {
         return modelMapper.map(appUser, AppUserDto.class);
     }
 
-    public AppUser convertToAppUser(AppUserDto appUserDto) {
+    public AppUser AppUserDtoToAppUser(AppUserDto appUserDto) {
         return modelMapper.map(appUserDto, AppUser.class);
     }
 }

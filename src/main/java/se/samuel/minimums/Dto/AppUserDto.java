@@ -18,5 +18,5 @@ public class AppUserDto {
     private String email;
     private String password;
     private List<MealPlanDto> mealPlans;
-    private List<ShoppingListDto> shoppinglist;
+    private List<ShoppingListDto> shoppingList;
 }
