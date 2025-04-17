@@ -1,4 +1,4 @@
-package se.samuel.minimums.Services;
+package se.samuel.minimums.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
