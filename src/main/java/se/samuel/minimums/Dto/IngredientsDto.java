@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FoodDto {
+public class IngredientsDto {
 
     private Long id;
     private String name;

@@ -17,6 +17,6 @@ public class ShoppingListDto {
 
     private AppUserDto user;
     private MealPlanDto mealPlan;
-    private List<FoodDto> foods;
+    private List<IngredientsDto> foods;
 
 }
