@@ -7,29 +7,40 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.samuel.minimums.Converter.ChildMapper;
+import se.samuel.minimums.Converter.RecipesMapper;
 import se.samuel.minimums.Dto.ChildDto;
+import se.samuel.minimums.Dto.RecipesDto;
 import se.samuel.minimums.Models.Child;
+import se.samuel.minimums.Models.Recipes;
 import se.samuel.minimums.Repo.ChildRepo;
+import se.samuel.minimums.Repo.RecipesRepo;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ChildServiceTest {
 
     @ExtendWith(MockitoExtension.class)
     @Mock
     private ChildRepo repo;
+    @Mock
+    private RecipesRepo recipesrepo;
 
     @Mock
     private ChildMapper mapper;
+    @Mock
+    RecipesMapper recipesMapper;
 
     @InjectMocks
     private ChildService childService;
 
     private Child child;
     private ChildDto childDto;
+
+    private Recipes recipes;
 
     @BeforeEach
     void setUp() {
@@ -44,6 +55,13 @@ class ChildServiceTest {
                 .name("Ella")
                 .age(10)
                 .allergies("Nuts")
+                .build();
+
+        recipes = Recipes.builder()
+                .id(1L)
+                .name("Carbonara")
+                .fromAge(12)
+                .toAge(16)
                 .build();
     }
     @Test
@@ -103,6 +121,7 @@ class ChildServiceTest {
                 .age(12)
                 .build();
 
+
         //Find from setUp
         when(repo.findById(1L)).thenReturn(Optional.of(child));
         when(repo.save(child)).thenReturn(updatedEntity);
@@ -140,7 +159,7 @@ class ChildServiceTest {
 
         String result = childService.deleteChild(1L);
 
-        assertEquals("Ingredient with id 1 has been deleted.", result);
+        assertEquals("Child with id " + id + " deleted.", result);
         verify(repo).deleteById(id);
 
     }
@@ -151,5 +170,67 @@ class ChildServiceTest {
 
         Exception ex = assertThrows(RuntimeException.class, () -> childService.deleteChild(id2));
         assertTrue(ex.getMessage().contains("Child by id " + id2 + " not found."));
+    }
+    @Test
+    void addNewRecipeToChild() {
+        Long childId = 1L;
+        RecipesDto recipesDto = RecipesDto.builder()
+                .name("Meatballs")
+                .fromAge(6)
+                .toAge(10)
+                .build();
+
+        // Mock the repository response for finding the child
+        when(repo.findById(childId)).thenReturn(Optional.of(child));
+
+        // Mock the recipe mapping
+        when(recipesMapper.RecipesRecipesDtoToRecipes(any(RecipesDto.class))).thenReturn(recipes);
+
+        // Call the method
+        childService.addNewRecipeToChild(childId, recipesDto);
+
+        // Verify the recipe is added to the child and saved
+        assertEquals(1, child.getRecipes().size());
+        verify(recipesrepo, times(1)).save(recipes);
+    }
+
+    @Test
+    void addRecipeToChild() {
+        Long childId = 1L;
+        Long recipeId = 1L;
+
+        // Mock the repository responses for finding child and recipe
+        when(repo.findById(childId)).thenReturn(Optional.of(child));
+        when(recipesrepo.findById(recipeId)).thenReturn(Optional.of(recipes));
+
+        // Call the method
+        childService.addRecipeToChild(childId, recipeId);
+
+        // Verify the recipe's child is set and the recipe is added to the child's recipe list
+        assertEquals(childId, recipes.getChild().getId());
+        assertTrue(child.getRecipes().contains(recipes));
+        verify(recipesrepo, times(1)).save(recipes);
+    }
+    @Test
+    void deleteRecipeFromChild() {
+        Long childId = 1L;
+        Long recipeId = 1L;
+
+        // Set up the relationship between child and recipe
+        child.setRecipes(new ArrayList<>());
+        child.getRecipes().add(recipes);
+        recipes.setChild(child);
+
+        // Mock the repository responses
+        when(repo.findById(childId)).thenReturn(Optional.of(child));
+        when(recipesrepo.findById(recipeId)).thenReturn(Optional.of(recipes));
+
+        // Call the method
+        childService.deleteRecipeFromChild(childId, recipeId);
+
+        // Verify that the recipe was removed from the child's recipe list and unlinked from the child
+        assertNull(recipes.getChild());
+        assertFalse(child.getRecipes().contains(recipes));
+        verify(recipesrepo, times(1)).save(recipes);
     }
 }

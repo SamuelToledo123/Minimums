@@ -3,9 +3,15 @@ package se.samuel.minimums.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.samuel.minimums.Converter.ChildMapper;
+import se.samuel.minimums.Converter.RecipesMapper;
 import se.samuel.minimums.Dto.ChildDto;
+import se.samuel.minimums.Dto.RecipesDto;
 import se.samuel.minimums.Models.Child;
+import se.samuel.minimums.Models.Recipes;
 import se.samuel.minimums.Repo.ChildRepo;
+import se.samuel.minimums.Repo.RecipesRepo;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +22,11 @@ public class ChildService {
     @Autowired
     ChildRepo childRepo;
     @Autowired
+    RecipesRepo recipesRepo;
+    @Autowired
     ChildMapper childMapper;
+    @Autowired
+    RecipesMapper recipesMapper;
 
     public List<ChildDto> getAllChildren() {
         return childRepo.findAll()
@@ -49,8 +59,61 @@ public class ChildService {
     public String deleteChild(Long id) {
         childRepo.findById(id).orElseThrow(() -> new RuntimeException("Child by id " + id + " not found."));
         childRepo.deleteById(id);
-        return "Child with id " + id + "deleted.";
+        return "Child with id " + id + " deleted.";
     }
+
+    public void addNewRecipeToChild(Long childId, RecipesDto recipesDto) {
+        Child child = childRepo.findById(childId).orElseThrow(() ->
+                new RuntimeException("Child not found with id: " + childId));
+
+        Recipes recipes = recipesMapper.RecipesRecipesDtoToRecipes(recipesDto);
+        if(child.getRecipes() == null) {
+            child.setRecipes(new ArrayList<>());
+        }
+        child.getRecipes().add(recipes);
+        recipesRepo.save(recipes);
+    }
+
+    public void addRecipeToChild(Long childId, Long recipeId) {
+        Child child = childRepo.findById(childId)
+                .orElseThrow(() -> new RuntimeException("Child not found with id: " + childId));
+
+        Recipes recipe = recipesRepo.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Recipe not found with id: " + recipeId));
+
+        recipe.setChild(child);
+        if (child.getRecipes() == null) {
+            child.setRecipes(new ArrayList<>());
+        }
+        if (!child.getRecipes().contains(recipe)) {
+            child.getRecipes().add(recipe);
+        }
+        recipesRepo.save(recipe);
+    }
+    public void deleteRecipeFromChild(Long childId, Long recipeId) {
+        Child child = childRepo.findById(childId)
+                .orElseThrow(() -> new RuntimeException("Child not found with id: " + childId));
+
+        Recipes recipe = recipesRepo.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Recipe not found with id: " + recipeId));
+
+        if (recipe.getChild() != null && recipe.getChild().getId().equals(childId)) {
+            recipe.setChild(null);
+
+            if (child.getRecipes() != null) {
+                child.getRecipes().remove(recipe);
+            }
+
+            recipesRepo.save(recipe);
+        } else {
+            throw new RuntimeException("Recipe is not assigned to this child.");
+        }
+    }
+
+
+
+
+
 
 
 }

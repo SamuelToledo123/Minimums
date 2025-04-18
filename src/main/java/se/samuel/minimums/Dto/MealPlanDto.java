@@ -18,5 +18,4 @@ public class MealPlanDto {
 
     private AppUserDto appUser;
     List<RecipesDto> recipes;
-
 }
