@@ -43,7 +43,6 @@ class AppUserServiceTest {
                 .id(1L)
                 .name("Test User")
                 .email("test@example.com")
-                .password("password")
                 .build();
     }
 
@@ -116,7 +115,6 @@ class AppUserServiceTest {
                 .id(1L)
                 .name("New Name")
                 .email("new@email.com")
-                .password("newpass")
                 .build();
 
         when(repo.findById(1L)).thenReturn(Optional.of(user));
