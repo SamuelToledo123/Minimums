@@ -157,7 +157,6 @@ class IngredientsServiceTest {
 
     @Test
     void deleteIngredient_notFound() {
-        Long id = 1L;
         when(repo.findById(999L)).thenReturn(Optional.empty());
         Exception ex = assertThrows(RuntimeException.class, () -> ingredientsService.deleteIngredient(999L));
         assertTrue(ex.getMessage().contains("Ingredient not found"));

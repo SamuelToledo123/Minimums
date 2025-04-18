@@ -37,7 +37,8 @@ public class IngredientsService {
 
     public IngredientsDto updateIngredient(Long id, IngredientsDto updated) {
 
-        Ingredients ingredient  = ingredientsRepo.findById(id).orElseThrow(() -> new RuntimeException("Not Found"));
+        Ingredients ingredient  = ingredientsRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Ingredient not found"));
         ingredient.setName(updated.getName());
         ingredient.setQuantity(updated.getQuantity());
         ingredient.setNutrition(updated.getNutrition());
