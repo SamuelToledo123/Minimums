@@ -53,7 +53,7 @@ class IngredientsServiceTest {
     @Test
     void getAllIngredients() {
         when(repo.findAll()).thenReturn(List.of(ingredients));
-        when(mapper.IngredientsToIngredientsDto(ingredients)).thenReturn(ingredientsDto);
+        when(mapper.toDto(ingredients)).thenReturn(ingredientsDto);
 
         List<IngredientsDto> result = ingredientsService.getAllIngredients();
 
@@ -78,13 +78,13 @@ class IngredientsServiceTest {
     @Test
     void createIngredient() {
         // Mock the mapping from DTO to entity
-        when(mapper.IngredientsDtoToIngredients(ingredientsDto)).thenReturn(ingredients);
+        when(mapper.toEntity(ingredientsDto)).thenReturn(ingredients);
 
         // Mock the save operation
         when(repo.save(ingredients)).thenReturn(ingredients);
 
         // Mock the mapping back from entity to DTO
-        when(mapper.IngredientsToIngredientsDto(ingredients)).thenReturn(ingredientsDto);
+        when(mapper.toDto(ingredients)).thenReturn(ingredientsDto);
 
         // Call the method
         IngredientsDto result = ingredientsService.createIngredient(ingredientsDto);
@@ -95,9 +95,9 @@ class IngredientsServiceTest {
         assertEquals(2, result.getQuantity());
         assertEquals("20 kcal", result.getNutrition());
 
-        verify(mapper).IngredientsDtoToIngredients(ingredientsDto);
+        verify(mapper).toEntity(ingredientsDto);
         verify(repo).save(ingredients);
-        verify(mapper).IngredientsToIngredientsDto(ingredients);
+        verify(mapper).toDto(ingredients);
 
 
     }
@@ -127,7 +127,7 @@ class IngredientsServiceTest {
         //Find from setUp
         when(repo.findById(1L)).thenReturn(Optional.of(ingredients));
         when(repo.save(ingredients)).thenReturn(updatedEntity);
-        when(mapper.IngredientsToIngredientsDto(updatedEntity)).thenReturn(expectedDto);
+        when(mapper.toDto(updatedEntity)).thenReturn(expectedDto);
 
         IngredientsDto result = ingredientsService.updateIngredient(1L, updatedDto);
 
@@ -137,7 +137,7 @@ class IngredientsServiceTest {
 
         verify(repo).findById(1L);
         verify(repo).save(ingredients);
-        verify(mapper).IngredientsToIngredientsDto(updatedEntity);
+        verify(mapper).toDto(updatedEntity);
 
 
     }

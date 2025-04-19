@@ -1,5 +1,6 @@
 package se.samuel.minimums.Converter;
 
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,14 +9,15 @@ import se.samuel.minimums.Models.Child;
 
 
 @Component
+@RequiredArgsConstructor
 public class ChildMapper {
-    @Autowired
-    private ModelMapper modelMapper;
 
-    public ChildDto ChildToChildDto(Child child) {
+    private final ModelMapper modelMapper;
+
+    public ChildDto toDto(Child child) {
         return modelMapper.map(child, ChildDto.class);
     }
-    public Child ChildDtoToChild(ChildDto childDto) {
+    public Child toEntity(ChildDto childDto) {
         return modelMapper.map(childDto, Child.class);
     }
 
