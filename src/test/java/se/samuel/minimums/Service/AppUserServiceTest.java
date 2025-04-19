@@ -50,7 +50,7 @@ class AppUserServiceTest {
     @Test
     void getAllUsers_returnsDtoList() {
         when(repo.findAll()).thenReturn(List.of(user));
-        when(mapper.AppUserToAppUserDto(user)).thenReturn(dto);
+        when(mapper.toDto(user)).thenReturn(dto);
 
         List<AppUserDto> result = service.getAllUsers();
 
@@ -84,9 +84,9 @@ class AppUserServiceTest {
     @Test
     void createUser_success() {
         when(repo.findByEmail(dto.getEmail())).thenReturn(Optional.empty());
-        when(mapper.AppUserDtoToAppUser(dto)).thenReturn(user);
+        when(mapper.toEntity(dto)).thenReturn(user);
         when(repo.save(user)).thenReturn(user);
-        when(mapper.AppUserToAppUserDto(user)).thenReturn(dto);
+        when(mapper.toDto(user)).thenReturn(dto);
 
         AppUserDto result = service.createUser(dto);
 
@@ -121,7 +121,7 @@ class AppUserServiceTest {
 
         when(repo.findById(1L)).thenReturn(Optional.of(user));
         when(repo.save(any(AppUser.class))).thenReturn(updatedUser);
-        when(mapper.AppUserToAppUserDto(updatedUser)).thenReturn(updatedDto);
+        when(mapper.toDto(updatedUser)).thenReturn(updatedDto);
 
         AppUserDto result = service.updateAppUser(1L, updatedDto);
 
