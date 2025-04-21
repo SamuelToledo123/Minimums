@@ -184,7 +184,7 @@ class ChildServiceTest {
         when(repo.findById(childId)).thenReturn(Optional.of(child));
 
         // Mock the recipe mapping
-        when(recipesMapper.RecipesRecipesDtoToRecipes(any(RecipesDto.class))).thenReturn(recipes);
+        when(recipesMapper.RecipesDtoToRecipes(any(RecipesDto.class))).thenReturn(recipes);
 
         // Call the method
         childService.addNewRecipeToChild(childId, recipesDto);

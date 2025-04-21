@@ -66,7 +66,7 @@ public class ChildService {
         Child child = childRepo.findById(childId).orElseThrow(() ->
                 new RuntimeException("Child not found with id: " + childId));
 
-        Recipes recipes = recipesMapper.RecipesRecipesDtoToRecipes(recipesDto);
+        Recipes recipes = recipesMapper.RecipesDtoToRecipes(recipesDto);
         if(child.getRecipes() == null) {
             child.setRecipes(new ArrayList<>());
         }

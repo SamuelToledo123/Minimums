@@ -18,7 +18,7 @@ public class RecipesMapper {
 
     }
 
-    public Recipes RecipesRecipesDtoToRecipes(RecipesDto recipesDto) {
+    public Recipes RecipesDtoToRecipes(RecipesDto recipesDto) {
         return modelMapper.map(recipesDto, Recipes.class);
 
 
