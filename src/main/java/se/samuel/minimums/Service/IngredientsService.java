@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class IngredientsService {
+public class
+IngredientsService {
 
     @Autowired
     private IngredientsRepo ingredientsRepo;
@@ -19,7 +20,9 @@ public class IngredientsService {
     private IngredientsMapper ingredientsMapper;
 
     public List<IngredientsDto> getAllIngredients() {
-        return ingredientsRepo.findAll().stream().map(ingredientsMapper::IngredientsToIngredientsDto)
+        return ingredientsRepo.findAll()
+                .stream()
+                .map(ingredientsMapper::IngredientsToIngredientsDto)
                 .toList();
     }
 
