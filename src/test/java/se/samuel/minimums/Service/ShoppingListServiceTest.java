@@ -98,7 +98,7 @@ import static org.mockito.Mockito.when;
             AppUser user = new AppUser();
 
             when(shoppingListRepository.findById(1L)).thenReturn(Optional.of(existing));
-            when(appUserMapper.AppUserDtoToAppUser(userDto)).thenReturn(user);
+            when(appUserMapper.toEntity(userDto)).thenReturn(user);
             when(shoppingListRepository.save(existing)).thenReturn(existing);
             when(shoppingListMapper.toDto(existing)).thenReturn(dto);
 
