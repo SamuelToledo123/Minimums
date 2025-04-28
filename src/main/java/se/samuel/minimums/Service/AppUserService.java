@@ -46,7 +46,6 @@ public class AppUserService {
 
         existingUser.setName(appUserDto.getName());
         existingUser.setEmail(appUserDto.getEmail());
-        existingUser.setPassword(appUserDto.getPassword());
 
         AppUser updatedUser = repo.save(existingUser);
         return appUserMapper.toDto(updatedUser);

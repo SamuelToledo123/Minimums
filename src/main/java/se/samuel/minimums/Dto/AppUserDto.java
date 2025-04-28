@@ -16,7 +16,6 @@ public class AppUserDto {
     private Long id;
     private String name;
     private String email;
-    private String password;
     private List<MealPlanDto> mealPlans;
     private List<ShoppingListDto> shoppingList;
 }
