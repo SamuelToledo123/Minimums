@@ -56,7 +56,7 @@ public class ShoppingListService {
                 .orElseThrow(() -> new RuntimeException("Shopping list not found with id: " + id));
 
         existing.setDate(dto.getDate());
-        existing.setUser(appUserMapper.AppUserDtoToAppUser(dto.getUser()));
+        existing.setUser(appUserMapper.toEntity(dto.getUser()));
 
         //Map to MealPlan after LAP-4 is merged & finished to main
         // existing.setMealPlan(dto.getMealPlan());
@@ -64,7 +64,7 @@ public class ShoppingListService {
         if (dto.getIngredients() != null) {
             existing.getIngredients().clear();
             List<Ingredients> newIngredients = dto.getIngredients().stream()
-                    .map(ingredientsMapper::IngredientsDtoToIngredients)
+                    .map(ingredientsMapper::toEntity)
                     .peek(i -> i.setShoppingList(existing))
                     .toList();
             existing.getIngredients().addAll(newIngredients);
