@@ -9,10 +9,9 @@ import se.samuel.minimums.Dto.RecipesDto;
 import se.samuel.minimums.Models.Ingredients;
 import se.samuel.minimums.Models.Recipes;
 import se.samuel.minimums.Repo.RecipesRepo;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 public class RecipesService {
@@ -29,22 +28,22 @@ public class RecipesService {
     public List<RecipesDto> getAllRecipes() {
         return recipesRepo.findAll()
                 .stream()
-                .map(recipesMapper::RecipesToRecipesDto)
+                .map(recipesMapper::toDto)
                 .toList();
     }
 
     public Optional<RecipesDto> getRecipeById(Long id) {
         return recipesRepo.findById(id)
-                .map(recipesMapper::RecipesToRecipesDto);
+                .map(recipesMapper::toDto);
     }
     public RecipesDto createRecipe(RecipesDto recipesDto) {
 
-        Recipes newRecipe = recipesMapper.RecipesDtoToRecipes(recipesDto);
+        Recipes newRecipe = recipesMapper.toEntity(recipesDto);
         if (newRecipe.getIngredients() != null) {
             newRecipe.getIngredients().forEach(ingredient -> ingredient.setRecipe(newRecipe));
         }
         Recipes savedRecipe = recipesRepo.save(newRecipe);
-        return recipesMapper.RecipesToRecipesDto(savedRecipe);
+        return recipesMapper.toDto(savedRecipe);
     }
 
     public RecipesDto updateRecipe(Long id, RecipesDto recipesDto) {
@@ -60,13 +59,13 @@ public class RecipesService {
         if (recipesDto.getIngredientsDtoList() != null) {
             existing.getIngredients().clear();
             List<Ingredients> newIngredients = recipesDto.getIngredientsDtoList().stream()
-                    .map(ingredientsMapper::IngredientsDtoToIngredients)
+                    .map(ingredientsMapper::toEntity)
                     .peek(ingredient -> ingredient.setRecipe(existing))
                     .toList();
             existing.getIngredients().addAll(newIngredients);
         }
         Recipes updated = recipesRepo.save(existing);
-        return recipesMapper.RecipesToRecipesDto(updated);
+        return recipesMapper.toDto(updated);
     }
 
     public void deleteRecipe(Long id) {
