@@ -1,6 +1,6 @@
 package se.samuel.minimums.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.samuel.minimums.Converter.ChildMapper;
 import se.samuel.minimums.Converter.RecipesMapper;
@@ -17,28 +17,25 @@ import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class ChildService {
 
-    @Autowired
-    ChildRepo childRepo;
-    @Autowired
-    RecipesRepo recipesRepo;
-    @Autowired
-    ChildMapper childMapper;
-    @Autowired
-    RecipesMapper recipesMapper;
+    private final ChildRepo childRepo;
+    private final RecipesRepo recipesRepo;
+    private final ChildMapper childMapper;
+    private final RecipesMapper recipesMapper;
 
     public List<ChildDto> getAllChildren() {
         return childRepo.findAll()
                 .stream()
-                .map(childMapper::ChildToChildDto).toList();
+                .map(childMapper::toDto).toList();
 
     }
 
     public ChildDto createChild(ChildDto childDto) {
-        Child newChild = childMapper.ChildDtoToChild(childDto);
+        Child newChild = childMapper.toEntity(childDto);
         Child savedChild = childRepo.save(newChild);
-        return childMapper.ChildToChildDto(savedChild);
+        return childMapper.toDto(savedChild);
     }
 
     public Optional<Child> getChildById(Long id) {
@@ -53,7 +50,7 @@ public class ChildService {
         child.setAllergies(updatedDto.getAllergies());
         Child savedChild = childRepo.save(child);
         // UPPDATERA SENARE MED RECEPT & REKOMMENDATIONER
-        return childMapper.ChildToChildDto(savedChild);
+        return childMapper.toDto(savedChild);
     }
 
     public String deleteChild(Long id) {
@@ -66,7 +63,7 @@ public class ChildService {
         Child child = childRepo.findById(childId).orElseThrow(() ->
                 new RuntimeException("Child not found with id: " + childId));
 
-        Recipes recipes = recipesMapper.RecipesDtoToRecipes(recipesDto);
+        Recipes recipes = recipesMapper.toEntity(recipesDto);
         if(child.getRecipes() == null) {
             child.setRecipes(new ArrayList<>());
         }

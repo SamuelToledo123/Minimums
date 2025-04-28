@@ -1,6 +1,6 @@
 package se.samuel.minimums.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.samuel.minimums.Converter.AppUserMapper;
 import se.samuel.minimums.Dto.AppUserDto;
@@ -11,16 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AppUserService {
 
-    @Autowired
-    private AppUserRepo repo;
-    @Autowired
-    private AppUserMapper appUserMapper;
+    private final AppUserRepo repo;
+    private final AppUserMapper appUserMapper;
 
     public List<AppUserDto> getAllUsers() {
         return repo.findAll().stream()
-                .map(appUserMapper::AppUserToAppUserDto)
+                .map(appUserMapper::toDto)
                 .toList();
     }
 
@@ -36,10 +35,10 @@ public class AppUserService {
             throw new RuntimeException("User with email " + appUserDto.getEmail() + " already exists.");
         }
 
-        AppUser newUser = appUserMapper.AppUserDtoToAppUser(appUserDto);
+        AppUser newUser = appUserMapper.toEntity(appUserDto);
         AppUser savedUser = repo.save(newUser);
 
-        return appUserMapper.AppUserToAppUserDto(savedUser);
+        return appUserMapper.toDto(savedUser);
     }
     public AppUserDto updateAppUser(Long id, AppUserDto appUserDto) {
         AppUser existingUser = repo.findById(id)
@@ -49,7 +48,7 @@ public class AppUserService {
         existingUser.setEmail(appUserDto.getEmail());
 
         AppUser updatedUser = repo.save(existingUser);
-        return appUserMapper.AppUserToAppUserDto(updatedUser);
+        return appUserMapper.toDto(updatedUser);
     }
 
     public String deleteUser(Long id) {

@@ -1,6 +1,6 @@
 package se.samuel.minimums.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import se.samuel.minimums.Converter.IngredientsMapper;
 import se.samuel.minimums.Dto.IngredientsDto;
@@ -11,18 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class
-IngredientsService {
+@RequiredArgsConstructor
+public class IngredientsService {
 
-    @Autowired
-    private IngredientsRepo ingredientsRepo;
-    @Autowired
-    private IngredientsMapper ingredientsMapper;
+    private final IngredientsRepo ingredientsRepo;
+    private final IngredientsMapper ingredientsMapper;
 
     public List<IngredientsDto> getAllIngredients() {
-        return ingredientsRepo.findAll()
-                .stream()
-                .map(ingredientsMapper::IngredientsToIngredientsDto)
+        return ingredientsRepo.findAll().stream().map(ingredientsMapper::toDto)
                 .toList();
     }
 
@@ -32,10 +28,10 @@ IngredientsService {
 
     public IngredientsDto createIngredient(IngredientsDto ingredientsDto) {
 
-        Ingredients newIngredient = ingredientsMapper.IngredientsDtoToIngredients(ingredientsDto);
+        Ingredients newIngredient = ingredientsMapper.toEntity(ingredientsDto);
        Ingredients savedIngredient = ingredientsRepo.save(newIngredient);
 
-        return ingredientsMapper.IngredientsToIngredientsDto(savedIngredient);
+        return ingredientsMapper.toDto(savedIngredient);
     }
 
     public IngredientsDto updateIngredient(Long id, IngredientsDto updated) {
@@ -48,7 +44,7 @@ IngredientsService {
 
         Ingredients savedIngredients = ingredientsRepo.save(ingredient);
 
-        return ingredientsMapper.IngredientsToIngredientsDto(savedIngredients);
+        return ingredientsMapper.toDto(savedIngredients);
     }
 
     public String deleteIngredient(Long id) {

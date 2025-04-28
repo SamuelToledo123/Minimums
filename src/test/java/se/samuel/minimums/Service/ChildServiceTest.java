@@ -67,7 +67,7 @@ class ChildServiceTest {
     @Test
     void getAllChildren() {
         when(repo.findAll()).thenReturn(List.of(child));
-        when(mapper.ChildToChildDto(child)).thenReturn(childDto);
+        when(mapper.toDto(child)).thenReturn(childDto);
 
         List<ChildDto> result = childService.getAllChildren();
 
@@ -83,13 +83,13 @@ class ChildServiceTest {
     @Test
     void createChild() {
 
-        when(mapper.ChildDtoToChild(childDto)).thenReturn(child);
+        when(mapper.toEntity(childDto)).thenReturn(child);
 
         // Mock the save operation
         when(repo.save(child)).thenReturn(child);
 
         // Mock the mapping back from entity to DTO
-        when(mapper.ChildToChildDto(child)).thenReturn(childDto);
+        when(mapper.toDto(child)).thenReturn(childDto);
 
         // Call the method
         ChildDto result = childService.createChild(childDto);
@@ -100,9 +100,9 @@ class ChildServiceTest {
         assertEquals(10, result.getAge());
         assertEquals("Nuts", result.getAllergies());
 
-        verify(mapper).ChildDtoToChild(childDto);
+        verify(mapper).toEntity(childDto);
         verify(repo).save(child);
-        verify(mapper).ChildToChildDto(child);
+        verify(mapper).toDto(child);
     }
     @Test
     void updateChild() {
@@ -125,7 +125,7 @@ class ChildServiceTest {
         //Find from setUp
         when(repo.findById(1L)).thenReturn(Optional.of(child));
         when(repo.save(child)).thenReturn(updatedEntity);
-        when(mapper.ChildToChildDto(updatedEntity)).thenReturn(expectedDto);
+        when(mapper.toDto(updatedEntity)).thenReturn(expectedDto);
 
         ChildDto result = childService.updateChild(1L, expectedDto);
 
@@ -135,7 +135,7 @@ class ChildServiceTest {
 
         verify(repo).findById(1L);
         verify(repo).save(child);
-        verify(mapper).ChildToChildDto(updatedEntity);
+        verify(mapper).toDto(updatedEntity);
 
     }
 
@@ -184,7 +184,7 @@ class ChildServiceTest {
         when(repo.findById(childId)).thenReturn(Optional.of(child));
 
         // Mock the recipe mapping
-        when(recipesMapper.RecipesDtoToRecipes(any(RecipesDto.class))).thenReturn(recipes);
+        when(recipesMapper.toEntity(any(RecipesDto.class))).thenReturn(recipes);
 
         // Call the method
         childService.addNewRecipeToChild(childId, recipesDto);
