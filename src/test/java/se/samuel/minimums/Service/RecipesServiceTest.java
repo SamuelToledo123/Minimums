@@ -72,7 +72,7 @@ import java.util.Optional;
         @Test
         void testGetAllRecipes() {
             when(recipesRepo.findAll()).thenReturn(List.of(recipe));
-            when(recipesMapper.RecipesToRecipesDto(recipe)).thenReturn(recipeDto);
+            when(recipesMapper.toDto(recipe)).thenReturn(recipeDto);
 
             List<RecipesDto> result = recipesService.getAllRecipes();
 
@@ -83,7 +83,7 @@ import java.util.Optional;
         @Test
         void testGetRecipeById() {
             when(recipesRepo.findById(1L)).thenReturn(Optional.of(recipe));
-            when(recipesMapper.RecipesToRecipesDto(recipe)).thenReturn(recipeDto);
+            when(recipesMapper.toDto(recipe)).thenReturn(recipeDto);
 
             Optional<RecipesDto> result = recipesService.getRecipeById(1L);
 
@@ -93,9 +93,9 @@ import java.util.Optional;
 
         @Test
         void testCreateRecipe() {
-            when(recipesMapper.RecipesDtoToRecipes(recipeDto)).thenReturn(recipe);
+            when(recipesMapper.toEntity(recipeDto)).thenReturn(recipe);
             when(recipesRepo.save(recipe)).thenReturn(recipe);
-            when(recipesMapper.RecipesToRecipesDto(recipe)).thenReturn(recipeDto);
+            when(recipesMapper.toDto(recipe)).thenReturn(recipeDto);
 
             RecipesDto result = recipesService.createRecipe(recipeDto);
 
@@ -127,8 +127,8 @@ import java.util.Optional;
                 recipe.setIngredients(new ArrayList<>()); // make sure it's not null
 
                 when(recipesRepo.findById(1L)).thenReturn(Optional.of(recipe));
-                when(ingredientsMapper.IngredientsDtoToIngredients(ingredientsDto)).thenReturn(ingredientEntity);
-                when(recipesMapper.RecipesToRecipesDto(any())).thenReturn(updateDto);
+                when(ingredientsMapper.toEntity(ingredientsDto)).thenReturn(ingredientEntity);
+                when(recipesMapper.toDto(any())).thenReturn(updateDto);
 
                 RecipesDto result = recipesService.updateRecipe(1L, updateDto);
 
