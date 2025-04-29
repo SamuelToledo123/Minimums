@@ -19,5 +19,5 @@ public class ChildDto {
     private String allergies;
 
     private List<RecipesDto> recommendedRecipes;
-    private List<RecipesDto> customizedRecipes;
+    //private List<RecipesDto> customizedRecipes;
 }

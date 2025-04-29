@@ -28,7 +28,7 @@ public class ProjectSecurityConfig {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
-                .requestMatchers("/", "/register", "/api/auth/**").permitAll()
+                .requestMatchers("/", "/register", "/api/auth/**", "api/recipes/**").permitAll()
                         .requestMatchers("/api/meal-plans/**").permitAll()
                         .requestMatchers("/user").authenticated()
                         .anyRequest().authenticated()
