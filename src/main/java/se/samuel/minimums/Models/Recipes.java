@@ -24,7 +24,7 @@ public class Recipes {
     private int fromAge;
     private int toAge;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Ingredients> ingredients;
 
     @ManyToOne
