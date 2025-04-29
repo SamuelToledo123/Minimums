@@ -90,7 +90,7 @@ public class MealPlanServiceTest {
     void getMealPlanById_returnsOptionalMealPlan() {
         when(mealPlanRepo.findById(1L)).thenReturn(Optional.of(mealPlan));
 
-        Optional<MealPlan> result = mealPlanService.findMealPlanById(1L);
+        Optional<MealPlanDto> result = mealPlanService.findMealPlanById(1L);
 
         assertTrue(result.isPresent());
         assertEquals("Lunch", result.get().getMealType());
