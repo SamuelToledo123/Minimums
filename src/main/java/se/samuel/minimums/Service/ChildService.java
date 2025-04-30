@@ -64,10 +64,8 @@ public class ChildService {
                 new RuntimeException("Child not found with id: " + childId));
 
         Recipes recipes = recipesMapper.toEntity(recipesDto);
-        if(child.getRecipes() == null) {
-            child.setRecipes(new ArrayList<>());
-        }
-        child.getRecipes().add(recipes);
+
+        recipes.setChild(child);
         recipesRepo.save(recipes);
     }
 
