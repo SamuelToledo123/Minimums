@@ -30,8 +30,9 @@ public class MealPlanService {
                 .map(mealPlanMapper::toDto).toList();
     }
 
-    public Optional<MealPlan> findMealPlanById(Long id) {
-        return mealPlanRepo.findById(id);
+    public Optional<MealPlanDto> findMealPlanById(Long id) {
+        return mealPlanRepo.findById(id)
+                .map(mealPlanMapper::toDto);
     }
 
     public MealPlanDto createMealPlan(MealPlanDto mealPlanDto) {
