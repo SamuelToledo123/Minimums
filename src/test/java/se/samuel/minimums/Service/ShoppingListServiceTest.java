@@ -5,13 +5,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.samuel.minimums.Converter.AppUserMapper;
-import se.samuel.minimums.Converter.IngredientsMapper;
 import se.samuel.minimums.Converter.ShoppingListMapper;
 import se.samuel.minimums.Dto.AppUserDto;
+import se.samuel.minimums.Dto.MealPlanDto;
 import se.samuel.minimums.Dto.ShoppingListDto;
 import se.samuel.minimums.Models.AppUser;
+import se.samuel.minimums.Models.MealPlan;
 import se.samuel.minimums.Models.ShoppingList;
+import se.samuel.minimums.Repo.AppUserRepo;
+import se.samuel.minimums.Repo.MealPlanRepo;
 import se.samuel.minimums.Repo.ShoppingListRepo;
 
 import java.util.ArrayList;
@@ -33,12 +35,10 @@ import static org.mockito.Mockito.when;
 
         @Mock
         private ShoppingListMapper shoppingListMapper;
-
         @Mock
-        private IngredientsMapper ingredientsMapper;
-
+        AppUserRepo appUserRepo;
         @Mock
-        private AppUserMapper appUserMapper;
+        MealPlanRepo mealPlanRepo;
 
         @Test
         void testGetAllShoppingLists() {
@@ -72,9 +72,25 @@ import static org.mockito.Mockito.when;
         @Test
         void testCreateShoppingList() {
             ShoppingListDto dto = new ShoppingListDto();
+            AppUserDto userDto = new AppUserDto();
+            userDto.setEmail("test@example.com");
+            dto.setUser(userDto);
+
+            MealPlanDto mealPlanDto = new MealPlanDto();
+            mealPlanDto.setId(1L);
+            dto.setMealPlan(mealPlanDto);
+
             ShoppingList entity = new ShoppingList();
 
+            AppUser appUser = new AppUser();
+            appUser.setEmail("test@example.com");
+
+            MealPlan mealPlan = new MealPlan();
+            mealPlan.setId(1L);
+
             when(shoppingListMapper.toEntity(dto)).thenReturn(entity);
+            when(appUserRepo.findByEmail("test@example.com")).thenReturn(Optional.of(appUser));
+            when(mealPlanRepo.findById(1L)).thenReturn(Optional.of(mealPlan));
             when(shoppingListRepository.save(entity)).thenReturn(entity);
             when(shoppingListMapper.toDto(entity)).thenReturn(dto);
 
@@ -84,41 +100,42 @@ import static org.mockito.Mockito.when;
             verify(shoppingListRepository).save(entity);
         }
 
-        @Test
-        void testUpdateShoppingList() {
-            ShoppingList existing = new ShoppingList();
-            existing.setIngredients(new ArrayList<>());
+    @Test
+    void testUpdateShoppingList() {
+        // Setup
+        ShoppingList existing = new ShoppingList();
+        existing.setIngredients(new ArrayList<>());
 
-            ShoppingListDto dto = new ShoppingListDto();
-            dto.setDate("2025-04-21");
-            dto.setIngredients(new ArrayList<>());
-            AppUserDto userDto = new AppUserDto();
-            dto.setUser(userDto);
+        ShoppingListDto dto = new ShoppingListDto();
+        dto.setDate("2025-04-21");
 
-            AppUser user = new AppUser();
+        AppUserDto userDto = new AppUserDto();
+        userDto.setEmail("test@example.com");
+        dto.setUser(userDto);
 
-            when(shoppingListRepository.findById(1L)).thenReturn(Optional.of(existing));
-            when(appUserMapper.toEntity(userDto)).thenReturn(user);
-            when(shoppingListRepository.save(existing)).thenReturn(existing);
-            when(shoppingListMapper.toDto(existing)).thenReturn(dto);
+        AppUser user = new AppUser();
+        user.setEmail("test@example.com");
 
-            ShoppingListDto result = shoppingListService.updateShoppingList(1L, dto);
+        MealPlanDto mealPlanDto = new MealPlanDto();
+        mealPlanDto.setId(100L);
+        dto.setMealPlan(mealPlanDto);
 
-            assertEquals(dto.getDate(), result.getDate());
-            verify(shoppingListRepository).save(existing);
-            System.out.println("Update Result: " + result);
-        }
+        MealPlan mealPlan = new MealPlan();
+        mealPlan.setId(100L);
 
-        @Test
-        void testDeleteShoppingList() {
-            when(shoppingListRepository.existsById(1L)).thenReturn(true);
+        when(shoppingListRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(appUserRepo.findByEmail("test@example.com")).thenReturn(Optional.of(user));
+        when(mealPlanRepo.findById(100L)).thenReturn(Optional.of(mealPlan));
+        when(shoppingListRepository.save(existing)).thenReturn(existing);
+        when(shoppingListMapper.toDto(existing)).thenReturn(dto);
 
-            shoppingListService.deleteShoppingList(1L);
+        ShoppingListDto result = shoppingListService.updateShoppingList(1L, dto);
 
-            verify(shoppingListRepository).deleteById(1L);
-        }
-
-        @Test
+        assertEquals(dto.getDate(), result.getDate());
+        verify(shoppingListRepository).save(existing);
+        System.out.println("Update Result: " + result);
+    }
+    @Test
         void testDeleteShoppingList_NotFound() {
             when(shoppingListRepository.existsById(2L)).thenReturn(false);
 

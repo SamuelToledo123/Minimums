@@ -1,6 +1,7 @@
 package se.samuel.minimums.Service;
 
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import se.samuel.minimums.Converter.IngredientsMapper;
@@ -14,16 +15,12 @@ import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class RecipesService {
 
-    @Autowired
-    private RecipesRepo recipesRepo;
-
-    @Autowired
-    private RecipesMapper recipesMapper;
-
-    @Autowired
-    IngredientsMapper ingredientsMapper;
+    private final RecipesRepo recipesRepo;
+    private final RecipesMapper recipesMapper;
+    private final IngredientsMapper ingredientsMapper;
 
     public List<RecipesDto> getAllRecipes() {
         return recipesRepo.findAll()
