@@ -11,6 +11,7 @@ import se.samuel.minimums.Service.RegistrationService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth")
+@CrossOrigin(origins = "http://localhost:5173")
 public class RegistrationController {
 
     private final RegistrationService registrationService;
