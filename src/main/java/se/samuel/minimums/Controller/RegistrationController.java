@@ -23,6 +23,10 @@ public class RegistrationController {
 
     @GetMapping("/userDetails")
     public ResponseEntity<UserResponseDto> getUserDetailsAfterLogin(Authentication auth) {
+        if (auth == null) {
+            return ResponseEntity.status(401).build();
+        }
+
         return registrationService.getUserDetailsAfterLogin(auth.getName());
     }
 }
