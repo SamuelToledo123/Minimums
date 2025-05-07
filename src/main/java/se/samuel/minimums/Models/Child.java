@@ -27,6 +27,10 @@ public class Child {
     @OneToMany(mappedBy = "child", cascade = CascadeType.ALL)
     private List<Recipes> recipes;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;
+
 }
 
 
