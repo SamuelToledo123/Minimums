@@ -41,25 +41,37 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        final String jwt = authHeader.substring(7); // ta bort "Bearer "
-        final String userEmail = jwtService.extractUsername(jwt);
+        final String jwt = authHeader.substring(7);
 
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
+        try {
+            final String userEmail = jwtService.extractUsername(jwt);
 
-            if (jwtService.validateToken(jwt, userDetails)) {
-                Claims claims = jwtService.extractAllClaims(jwt);
-                List<SimpleGrantedAuthority> authorities = ((List<?>) claims.get("authorities")).stream()
-                        .map(role -> new SimpleGrantedAuthority(role.toString()))
-                        .collect(Collectors.toList());
+            if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
 
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
+                if (jwtService.validateToken(jwt, userDetails)) {
+                    Claims claims = jwtService.extractAllClaims(jwt);
+                    List<SimpleGrantedAuthority> authorities = ((List<?>) claims.get("authorities")).stream()
+                            .map(role -> new SimpleGrantedAuthority(role.toString()))
+                            .collect(Collectors.toList());
 
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    UsernamePasswordAuthenticationToken authToken =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
 
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+
+        } catch (io.jsonwebtoken.ExpiredJwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("JWT expired");
+            return;
+        } catch (io.jsonwebtoken.JwtException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("Invalid JWT");
+            return;
         }
 
         filterChain.doFilter(request, response);

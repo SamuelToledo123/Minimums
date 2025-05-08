@@ -27,6 +27,9 @@ public class AppUser {
     private String role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Child> children;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<MealPlan> mealPlans;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
