@@ -40,8 +40,27 @@ class RecipeControllerTest {
 
     @Test
     void testGetAllRecipes() throws Exception {
-        RecipesDto recipe1 = new RecipesDto(1L, "Pancakes", "Mix and cook", "Delicious", 2, 5, null, null, null);
-        RecipesDto recipe2 = new RecipesDto(2L, "Omelette", "Whisk and fry", "Egg-based", 3, 6, null, null, null);
+        RecipesDto recipe1 = RecipesDto.builder()
+                .id(1L)
+                .name("Pancakes")
+                .instructions("Mix and cook")
+                .description("Delicious")
+                .fromAge(2)
+                .toAge(5)
+                .ingredientsDtoList(null)
+                .child(null)
+                .build();
+
+        RecipesDto recipe2 = RecipesDto.builder()
+                .id(2L)
+                .name("Omelette")
+                .instructions("Whisk and fry")
+                .description("Egg-based")
+                .fromAge(3)
+                .toAge(6)
+                .ingredientsDtoList(null)
+                .child(null)
+                .build();
 
         when(recipesService.getAllRecipes()).thenReturn(Arrays.asList(recipe1, recipe2));
 
@@ -53,7 +72,16 @@ class RecipeControllerTest {
 
     @Test
     void testGetRecipeById() throws Exception {
-        RecipesDto recipe = new RecipesDto(1L, "Pancakes", "Mix and cook", "Delicious", 2, 5, null, null, null);
+        RecipesDto recipe = RecipesDto.builder()
+                .id(1L)
+                .name("Pancakes")
+                .instructions("Mix and cook")
+                .description("Delicious")
+                .fromAge(2)
+                .toAge(5)
+                .ingredientsDtoList(null)
+                .child(null)
+                .build();
 
         when(recipesService.getRecipeById(1L)).thenReturn(Optional.of(recipe));
 
@@ -73,8 +101,26 @@ class RecipeControllerTest {
 
     @Test
     void testCreateRecipe() throws Exception {
-        RecipesDto recipe = new RecipesDto(null, "Banana Pancakes", "Mix and cook", "Yummy", 2, 5, null, null, null);
-        RecipesDto createdRecipe = new RecipesDto(1L, "Banana Pancakes", "Mix and cook", "Yummy", 2, 5, null, null, null);
+        RecipesDto recipe = RecipesDto.builder()
+                .name("Banana Pancakes")
+                .instructions("Mix and cook")
+                .description("Yummy")
+                .fromAge(2)
+                .toAge(5)
+                .ingredientsDtoList(null)
+                .child(null)
+                .build();
+
+        RecipesDto createdRecipe = RecipesDto.builder()
+                .id(1L)
+                .name("Banana Pancakes")
+                .instructions("Mix and cook")
+                .description("Yummy")
+                .fromAge(2)
+                .toAge(5)
+                .ingredientsDtoList(null)
+                .child(null)
+                .build();
 
         when(recipesService.createRecipe(any(RecipesDto.class))).thenReturn(createdRecipe);
 
@@ -87,7 +133,16 @@ class RecipeControllerTest {
 
     @Test
     void testUpdateRecipe() throws Exception {
-        RecipesDto updatedRecipe = new RecipesDto(1L, "Updated Pancakes", "Mix and fry", "Tasty", 3, 6, null, null, null);
+        RecipesDto updatedRecipe = RecipesDto.builder()
+                .id(1L)
+                .name("Updated Pancakes")
+                .instructions("Mix and fry")
+                .description("Tasty")
+                .fromAge(3)
+                .toAge(6)
+                .ingredientsDtoList(null)
+                .child(null)
+                .build();
 
         when(recipesService.updateRecipe(eq(1L), any(RecipesDto.class))).thenReturn(updatedRecipe);
 
@@ -100,9 +155,19 @@ class RecipeControllerTest {
 
     @Test
     void testUpdateRecipeNotFound() throws Exception {
-        RecipesDto updatedRecipe = new RecipesDto(1L, "Updated Pancakes", "Mix and fry", "Tasty", 3, 6, null, null, null);
+        RecipesDto updatedRecipe = RecipesDto.builder()
+                .id(1L)
+                .name("Updated Pancakes")
+                .instructions("Mix and fry")
+                .description("Tasty")
+                .fromAge(3)
+                .toAge(6)
+                .ingredientsDtoList(null)
+                .child(null)
+                .build();
 
-        when(recipesService.updateRecipe(eq(1L), any(RecipesDto.class))).thenThrow(new RuntimeException("Recipe not found"));
+        when(recipesService.updateRecipe(eq(1L), any(RecipesDto.class)))
+                .thenThrow(new RuntimeException("Recipe not found"));
 
         mockMvc.perform(put("/api/recipes/1")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -126,4 +191,3 @@ class RecipeControllerTest {
                 .andExpect(status().isNotFound());
     }
 }
-

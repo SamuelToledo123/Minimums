@@ -2,7 +2,9 @@ package se.samuel.minimums.Controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import se.samuel.minimums.Dto.MealPlanDto;
 import se.samuel.minimums.Service.MealPlanService;
@@ -29,9 +31,9 @@ public class MealPlanController {
     }
 
     @PostMapping
-    public ResponseEntity<MealPlanDto> create(@Valid @RequestBody MealPlanDto mealPlanDto) {
-        MealPlanDto created = mealPlanService.createMealPlan(mealPlanDto);
-        return ResponseEntity.status(201).body(created);
+    public ResponseEntity<MealPlanDto> create(@RequestBody MealPlanDto mealPlanDto, Authentication auth) {
+        MealPlanDto created = mealPlanService.createMealPlan(mealPlanDto, auth);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")

@@ -4,6 +4,7 @@ package se.samuel.minimums.Config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -32,6 +33,7 @@ public class ProjectSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/api/auth/register", "/api/auth/**").permitAll()
+                        .requestMatchers("/api/child/**","/api/meal-plans/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

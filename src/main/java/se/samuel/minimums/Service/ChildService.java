@@ -1,17 +1,17 @@
 package se.samuel.minimums.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import se.samuel.minimums.Converter.ChildMapper;
 import se.samuel.minimums.Converter.RecipesMapper;
 import se.samuel.minimums.Dto.ChildDto;
-import se.samuel.minimums.Dto.RecipesDto;
+import se.samuel.minimums.Models.AppUser;
 import se.samuel.minimums.Models.Child;
-import se.samuel.minimums.Models.Recipes;
 import se.samuel.minimums.Repo.ChildRepo;
 import se.samuel.minimums.Repo.RecipesRepo;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,9 +21,8 @@ import java.util.Optional;
 public class ChildService {
 
     private final ChildRepo childRepo;
-    private final RecipesRepo recipesRepo;
     private final ChildMapper childMapper;
-    private final RecipesMapper recipesMapper;
+    private final AppUserService appUserService;
 
     public List<ChildDto> getAllChildren() {
         return childRepo.findAll()
@@ -32,11 +31,18 @@ public class ChildService {
 
     }
 
-    public ChildDto createChild(ChildDto childDto) {
+    public ChildDto createChild(ChildDto childDto, String userEmail) {
+        AppUser user = appUserService.getUserByEmail(userEmail)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + userEmail));
+
         Child newChild = childMapper.toEntity(childDto);
+        newChild.setUser(user);
+
         Child savedChild = childRepo.save(newChild);
+
         return childMapper.toDto(savedChild);
     }
+
 
     public Optional<Child> getChildById(Long id) {
        return childRepo.findById(id);
@@ -49,66 +55,28 @@ public class ChildService {
         child.setAge(updatedDto.getAge());
         child.setAllergies(updatedDto.getAllergies());
         Child savedChild = childRepo.save(child);
-        // UPPDATERA SENARE MED RECEPT & REKOMMENDATIONER
         return childMapper.toDto(savedChild);
     }
 
     public String deleteChild(Long id) {
-        childRepo.findById(id).orElseThrow(() -> new RuntimeException("Child by id " + id + " not found."));
-        childRepo.deleteById(id);
-        return "Child with id " + id + " deleted.";
+        Child child = childRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Child not found"));
+
+        AppUser user = child.getUser();
+        user.getChildren().remove(child);
+
+        childRepo.delete(child);
+
+        return "Child deleted successfully.";
     }
-
-    public void addNewRecipeToChild(Long childId, RecipesDto recipesDto) {
-        Child child = childRepo.findById(childId).orElseThrow(() ->
-                new RuntimeException("Child not found with id: " + childId));
-
-        Recipes recipes = recipesMapper.toEntity(recipesDto);
-
-        recipes.setChild(child);
-        recipesRepo.save(recipes);
-    }
-
-    public void addRecipeToChild(Long childId, Long recipeId) {
-        Child child = childRepo.findById(childId)
-                .orElseThrow(() -> new RuntimeException("Child not found with id: " + childId));
-
-        Recipes recipe = recipesRepo.findById(recipeId)
-                .orElseThrow(() -> new RuntimeException("Recipe not found with id: " + recipeId));
-
-        recipe.setChild(child);
-        if (child.getRecipes() == null) {
-            child.setRecipes(new ArrayList<>());
-        }
-        if (!child.getRecipes().contains(recipe)) {
-            child.getRecipes().add(recipe);
-        }
-        recipesRepo.save(recipe);
-    }
-    public void deleteRecipeFromChild(Long childId, Long recipeId) {
-        Child child = childRepo.findById(childId)
-                .orElseThrow(() -> new RuntimeException("Child not found with id: " + childId));
-
-        Recipes recipe = recipesRepo.findById(recipeId)
-                .orElseThrow(() -> new RuntimeException("Recipe not found with id: " + recipeId));
-
-        if (recipe.getChild() != null && recipe.getChild().getId().equals(childId)) {
-            recipe.setChild(null);
-
-            if (child.getRecipes() != null) {
-                child.getRecipes().remove(recipe);
-            }
-
-            recipesRepo.save(recipe);
-        } else {
-            throw new RuntimeException("Recipe is not assigned to this child.");
-        }
-    }
-
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
+

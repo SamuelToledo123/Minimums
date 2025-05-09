@@ -6,8 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
 import se.samuel.minimums.Converter.MealPlanMapper;
-import se.samuel.minimums.Dto.AppUserDto;
 import se.samuel.minimums.Dto.MealPlanDto;
 import se.samuel.minimums.Dto.RecipesDto;
 import se.samuel.minimums.Models.AppUser;
@@ -24,7 +24,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
 @ExtendWith(MockitoExtension.class)
 public class MealPlanServiceTest {
 
@@ -36,6 +35,7 @@ public class MealPlanServiceTest {
     private AppUserRepo appUserRepo;
     @Mock
     private RecipesRepo recipesRepo;
+
     @InjectMocks
     private MealPlanService mealPlanService;
 
@@ -43,19 +43,24 @@ public class MealPlanServiceTest {
     private MealPlanDto mealPlanDto;
     private AppUser mockUser;
     private Recipes mockRecipe;
-
-    private AppUserDto mockUserDto;
-    private RecipesDto mockRecipeDto;
-
+    private RecipesDto recipeDto;
 
     @BeforeEach
     void setUp() {
+        mockUser = AppUser.builder()
+                .id(1L)
+                .email("test@example.com")
+                .build();
 
-        mockUser = mock(AppUser.class);
-        mockRecipe = mock(Recipes.class);
+        mockRecipe = Recipes.builder()
+                .id(1L)
+                .name("Pasta")
+                .build();
 
-        mockUserDto = mock(AppUserDto.class);
-        mockRecipeDto = mock(RecipesDto.class);
+        recipeDto = RecipesDto.builder()
+                .id(1L)
+                .name("Pasta")
+                .build();
 
         mealPlan = MealPlan.builder()
                 .id(1L)
@@ -69,8 +74,7 @@ public class MealPlanServiceTest {
                 .id(1L)
                 .mealType("Lunch")
                 .date("2025-04-19")
-                .appUser(mockUserDto)
-                .recipes(Collections.singletonList(mockRecipeDto))
+                .recipes(Collections.singletonList(recipeDto))
                 .build();
     }
 
@@ -89,6 +93,7 @@ public class MealPlanServiceTest {
     @Test
     void getMealPlanById_returnsOptionalMealPlan() {
         when(mealPlanRepo.findById(1L)).thenReturn(Optional.of(mealPlan));
+        when(mealPlanMapper.toDto(mealPlan)).thenReturn(mealPlanDto);
 
         Optional<MealPlanDto> result = mealPlanService.findMealPlanById(1L);
 
@@ -99,19 +104,21 @@ public class MealPlanServiceTest {
 
     @Test
     void createMealPlan_success() {
-        when(mockUserDto.getEmail()).thenReturn("test@example.com");
-        when(appUserRepo.findByEmail("test@example.com")).thenReturn(Optional.of(mockUser));
-        when(mockRecipeDto.getId()).thenReturn(1L);
+        Authentication auth = mock(Authentication.class);
+        when(auth.getName()).thenReturn("test@example.com");
+
         when(recipesRepo.findById(1L)).thenReturn(Optional.of(mockRecipe));
+        when(appUserRepo.findByEmail("test@example.com")).thenReturn(Optional.of(mockUser));
         when(mealPlanMapper.toEntity(mealPlanDto)).thenReturn(mealPlan);
         when(mealPlanRepo.save(mealPlan)).thenReturn(mealPlan);
         when(mealPlanMapper.toDto(mealPlan)).thenReturn(mealPlanDto);
 
-        MealPlanDto result = mealPlanService.createMealPlan(mealPlanDto);
+        MealPlanDto result = mealPlanService.createMealPlan(mealPlanDto, auth);
 
         assertNotNull(result);
         assertEquals("Lunch", result.getMealType());
 
+        verify(auth).getName();
         verify(appUserRepo).findByEmail("test@example.com");
         verify(recipesRepo).findById(1L);
         verify(mealPlanRepo).save(mealPlan);
@@ -132,24 +139,18 @@ public class MealPlanServiceTest {
                 .id(1L)
                 .mealType("Dinner")
                 .date("2025-04-20")
-                .appUser(mockUserDto)
-                .recipes(Collections.singletonList(mockRecipeDto))
+                .recipes(Collections.singletonList(recipeDto))
                 .build();
 
-        when(mockUserDto.getEmail()).thenReturn("test@example.com");
-        when(appUserRepo.findByEmail("test@example.com")).thenReturn(Optional.of(mockUser));
         when(mealPlanRepo.findById(1L)).thenReturn(Optional.of(mealPlan));
         when(recipesRepo.findById(1L)).thenReturn(Optional.of(mockRecipe));
-
         when(mealPlanRepo.save(any(MealPlan.class))).thenReturn(updatedMealPlan);
         when(mealPlanMapper.toDto(updatedMealPlan)).thenReturn(updatedDto);
-        when(mockRecipeDto.getId()).thenReturn(1L);
 
         MealPlanDto result = mealPlanService.updateMealPlan(1L, updatedDto);
 
         assertEquals("Dinner", result.getMealType());
         verify(mealPlanRepo).save(any(MealPlan.class));
-        verify(appUserRepo).findByEmail("test@example.com");
         verify(recipesRepo).findById(1L);
         verify(mealPlanMapper).toDto(updatedMealPlan);
     }
@@ -162,7 +163,3 @@ public class MealPlanServiceTest {
         verify(mealPlanRepo).delete(mealPlan);
     }
 }
-
-
-
-

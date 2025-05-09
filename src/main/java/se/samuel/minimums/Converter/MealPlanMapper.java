@@ -21,7 +21,6 @@ public class MealPlanMapper {
 
     public MealPlanDto toDto(MealPlan mealPlan) {
         MealPlanDto dto = modelMapper.map(mealPlan, MealPlanDto.class);
-        dto.setAppUser(appUserMapper.toDto(mealPlan.getUser()));
         dto.setRecipes(mealPlan.getRecipes().stream()
                 .map(recipeMapper::toDto)
                 .toList());

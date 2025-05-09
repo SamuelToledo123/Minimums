@@ -16,6 +16,5 @@ public class MealPlanDto {
     private String mealType;
     private String date;
 
-    private AppUserDto appUser;
     private List<RecipesDto> recipes;
 }
