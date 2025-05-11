@@ -25,7 +25,7 @@ public class MealPlan {
     @JoinColumn(name = "user_id")
     private AppUser user;
 
-    @OneToMany(mappedBy = "mealPlan", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "mealPlan", orphanRemoval = false)
     private List<Recipes> recipes;
 
 }

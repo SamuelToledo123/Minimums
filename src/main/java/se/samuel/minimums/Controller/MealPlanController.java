@@ -47,4 +47,14 @@ public class MealPlanController {
         String result = mealPlanService.deleteMealPlan(id);
         return ResponseEntity.ok(result);
     }
+
+    @PostMapping("/{mealPlanId}/recipes/{recipeId}")
+    public ResponseEntity<MealPlanDto> addRecipeToMealPlan(
+            @PathVariable Long mealPlanId,
+            @PathVariable Long recipeId
+    ) {
+        return ResponseEntity.ok(mealPlanService.addRecipeToMealPlan(mealPlanId, recipeId));
+    }
+
+
 }
