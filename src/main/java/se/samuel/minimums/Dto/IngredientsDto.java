@@ -4,19 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ShoppingListDto {
+public class IngredientsDto {
 
     private Long id;
-    private String date;
+    private String name;
+    private String nutrition;
+    private String category;
+    private double quantity;
 
-    private AppUserDto user;
-    private MealPlanDto mealPlan;
-    private List<IngredientsDto> ingredients;
-
+    private RecipesDto recipe;
 }

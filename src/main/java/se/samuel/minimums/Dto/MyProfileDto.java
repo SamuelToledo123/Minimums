@@ -8,14 +8,13 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class AppUserDto {
-
-    private Long id;
+public class MyProfileDto {
     private String name;
     private String email;
+    private List<ChildDto> children;
     private List<MealPlanDto> mealPlans;
-    private List<ShoppingListDto> shoppingList;
+
 }

@@ -1,5 +1,6 @@
 package se.samuel.minimums.Dto;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,13 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class FoodDto {
-
-    private Long id;
-    private String name;
-    private String nutrition;
-    private String category;
-    private double quantity;
-
-    private RecipesDto recipe;
+public class LoginRequestDto {
+    private String email;
+    private String password;
 }
