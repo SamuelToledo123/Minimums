@@ -48,7 +48,7 @@ class RecipeControllerTest {
                 .description("Delicious")
                 .fromAge(2)
                 .toAge(5)
-                .ingredients(null)
+                .ingredientsDtoList(null)
                 .child(null)
                 .build();
 
@@ -59,7 +59,7 @@ class RecipeControllerTest {
                 .description("Egg-based")
                 .fromAge(3)
                 .toAge(6)
-                .ingredients(null)
+                .ingredientsDtoList(null)
                 .child(null)
                 .build();
 
@@ -80,7 +80,7 @@ class RecipeControllerTest {
                 .description("Delicious")
                 .fromAge(2)
                 .toAge(5)
-                .ingredients(null)
+                .ingredientsDtoList(null)
                 .child(null)
                 .build();
 
@@ -108,7 +108,7 @@ class RecipeControllerTest {
                 .description("Yummy")
                 .fromAge(2)
                 .toAge(5)
-                .ingredients(null)
+                .ingredientsDtoList(null)
                 .child(null)
                 .build();
 
@@ -119,7 +119,7 @@ class RecipeControllerTest {
                 .description("Yummy")
                 .fromAge(2)
                 .toAge(5)
-                .ingredients(null)
+                .ingredientsDtoList(null)
                 .child(null)
                 .build();
 
@@ -141,7 +141,7 @@ class RecipeControllerTest {
                 .description("Tasty")
                 .fromAge(3)
                 .toAge(6)
-                .ingredients(null)
+                .ingredientsDtoList(null)
                 .child(null)
                 .build();
 
@@ -163,7 +163,7 @@ class RecipeControllerTest {
                 .description("Tasty")
                 .fromAge(3)
                 .toAge(6)
-                .ingredients(null)
+                .ingredientsDtoList(null)
                 .child(null)
                 .build();
 

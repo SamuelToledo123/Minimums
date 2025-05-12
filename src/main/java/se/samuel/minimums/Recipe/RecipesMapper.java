@@ -37,7 +37,7 @@ public class RecipesMapper {
                 .description(recipe.getDescription())
                 .fromAge(recipe.getFromAge())
                 .toAge(recipe.getToAge())
-                .ingredients(
+                .ingredientsDtoList(
                         recipe.getIngredients() != null
                                 ? recipe.getIngredients().stream()
                                 .map(this::mapIngredientToDto)

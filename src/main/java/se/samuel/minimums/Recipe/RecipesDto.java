@@ -22,6 +22,6 @@ public class RecipesDto {
     private int fromAge;
     private int toAge;
 
-    private List<IngredientsDto> ingredients;
+    private List<IngredientsDto> ingredientsDtoList;
     private ChildDto child;
 }
