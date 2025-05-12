@@ -18,4 +18,6 @@ public class IngredientsDto {
     private String category;
     private double quantity;
 
+    private RecipesDto recipe;
+
 }
