@@ -92,4 +92,22 @@ public class MealPlanService {
 
         return "MealPlan deleted successfully.";
     }
+
+    public MealPlanDto addRecipeToMealPlan(Long mealPlanId, Long recipeId) {
+        MealPlan mealPlan = mealPlanRepo.findById(mealPlanId)
+                .orElseThrow(() -> new RuntimeException("Meal plan not found with id: " + mealPlanId));
+
+        Recipes recipe = recipesRepo.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Recipe not found with id: " + recipeId));
+        if (mealPlan.getRecipes() != null && mealPlan.getRecipes().contains(recipe)) {
+            throw new RuntimeException("Recipe already added to this meal plan.");
+        }
+        recipe.setMealPlan(mealPlan);
+        if (mealPlan.getRecipes() == null) {
+            mealPlan.setRecipes(new ArrayList<>());
+        }
+        mealPlan.getRecipes().add(recipe);
+        mealPlanRepo.save(mealPlan);
+        return mealPlanMapper.toDto(mealPlan);
+    }
 }
