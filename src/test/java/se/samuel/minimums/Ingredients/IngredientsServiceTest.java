@@ -40,14 +40,14 @@ class IngredientsServiceTest {
                 .id(1L)
                 .name("Chicken")
                 .nutrition("20 kcal")
-                .quantity(2)
+                .quantity("2")
                 .build();
 
         ingredientsDto = IngredientsDto.builder()
                 .id(1L)
                 .name("Chicken")
                 .nutrition("20 kcal")
-                .quantity(2)
+                .quantity("2")
                 .build();
 
 
@@ -62,7 +62,7 @@ class IngredientsServiceTest {
         assertEquals(1, result.size());
         assertEquals("Chicken", result.get(0).getName());
         assertEquals("20 kcal", result.get(0).getNutrition());
-        assertEquals(2, result.get(0).getQuantity());
+        assertEquals("2", result.get(0).getQuantity());
         verify(repo).findAll();
 
     }
@@ -94,7 +94,7 @@ class IngredientsServiceTest {
         // Verify
         assertNotNull(result);
         assertEquals("Chicken", result.getName());
-        assertEquals(2, result.getQuantity());
+        assertEquals("2", result.getQuantity());
         assertEquals("20 kcal", result.getNutrition());
 
         verify(mapper).toEntity(ingredientsDto);
@@ -109,21 +109,21 @@ class IngredientsServiceTest {
 
         IngredientsDto updatedDto = new IngredientsDto();
         updatedDto.setName("Beef");
-        updatedDto.setQuantity(3);
+        updatedDto.setQuantity("3");
         updatedDto.setNutrition("30 kcal");
 
 
         Ingredients updatedEntity = Ingredients.builder()
                 .id(1L)
                 .name("Beef")
-                .quantity(3)
+                .quantity("3")
                 .nutrition("30 kcal")
                 .build();
 
         IngredientsDto expectedDto = new IngredientsDto();
         expectedDto.setId(1L);
         expectedDto.setName("Beef");
-        expectedDto.setQuantity(3);
+        expectedDto.setQuantity("3");
         expectedDto.setNutrition("30 kcal");
 
         //Find from setUp
@@ -134,7 +134,7 @@ class IngredientsServiceTest {
         IngredientsDto result = ingredientsService.updateIngredient(1L, updatedDto);
 
         assertEquals("Beef", result.getName());
-        assertEquals(3, result.getQuantity());
+        assertEquals("3", result.getQuantity());
         assertEquals("30 kcal", result.getNutrition());
 
         verify(repo).findById(1L);

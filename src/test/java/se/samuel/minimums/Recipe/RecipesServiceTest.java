@@ -64,7 +64,7 @@ import java.util.Optional;
                     .instructions("Boil water...")
                     .fromAge(2)
                     .toAge(5)
-                    .ingredientsDtoList(new ArrayList<>())
+                    .ingredients(new ArrayList<>())
                     .build();
 
 
@@ -122,7 +122,7 @@ import java.util.Optional;
                         .instructions("Updated Instructions")
                         .fromAge(1)
                         .toAge(3)
-                        .ingredientsDtoList(List.of(ingredientsDto))
+                        .ingredients(List.of(ingredientsDto))
                         .build();
 
                 recipe.setIngredients(new ArrayList<>()); // make sure it's not null

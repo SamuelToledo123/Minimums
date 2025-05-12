@@ -16,8 +16,8 @@ public class IngredientsDto {
     private String name;
     private String nutrition;
     private String category;
-    private double quantity;
+    private String quantity;
 
-    private RecipesDto recipe;
+    //private RecipesDto recipe;
 
 }

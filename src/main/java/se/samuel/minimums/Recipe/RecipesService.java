@@ -49,9 +49,9 @@ public class RecipesService {
         existing.setToAge(recipesDto.getToAge());
 
         // UPDATE INGREDIENTS
-        if (recipesDto.getIngredientsDtoList() != null) {
+        if (recipesDto.getIngredients() != null) {
             existing.getIngredients().clear();
-            List<Ingredients> newIngredients = recipesDto.getIngredientsDtoList().stream()
+            List<Ingredients> newIngredients = recipesDto.getIngredients().stream()
                     .map(ingredientsMapper::toEntity)
                     .peek(ingredient -> ingredient.setRecipe(existing))
                     .toList();

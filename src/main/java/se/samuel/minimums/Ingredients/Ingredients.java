@@ -21,7 +21,7 @@ public class Ingredients {
     private String name;
     private String nutrition;
     private String category;
-    private double quantity;
+    private String quantity;
 
     @ManyToOne
     @JoinColumn(name = "recipe_id")
