@@ -84,6 +84,10 @@ public class MealPlanService {
         AppUser user = mealPlan.getUser();
         user.getMealPlans().remove(mealPlan);
 
+        for (Recipes recipe : mealPlan.getRecipes()) {
+            recipe.setMealPlan(null);
+        }
+
         mealPlanRepo.delete(mealPlan);
 
         return "MealPlan deleted successfully.";
