@@ -6,9 +6,8 @@ import org.springframework.stereotype.Component;
 import se.samuel.minimums.Ingredients.Ingredients;
 import se.samuel.minimums.Ingredients.IngredientsDto;
 import java.util.ArrayList;
-
-
-
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -27,6 +26,7 @@ public class RecipesMapper {
                 .quantity(ingredient.getQuantity())
                 .build();
     }
+
     public RecipesDto toDto(Recipes recipe) {
         if (recipe == null) return null;
 
@@ -41,19 +41,33 @@ public class RecipesMapper {
                         recipe.getIngredients() != null
                                 ? recipe.getIngredients().stream()
                                 .map(this::mapIngredientToDto)
-                                .toList()
+                                .collect(Collectors.toList())
                                 : new ArrayList<>()
                 )
                 .build();
     }
 
+    public Recipes toEntity(RecipesDto dto) {
+        if (dto == null) return null;
 
+        Recipes recipe = modelMapper.map(dto, Recipes.class);
 
-    public Recipes toEntity(RecipesDto recipesDto) {
-        return modelMapper.map(recipesDto, Recipes.class);
+        if (dto.getIngredientsDtoList() != null) {
+            List<Ingredients> ingredients = dto.getIngredientsDtoList().stream()
+                    .map(ingDto -> {
+                        Ingredients ing = new Ingredients();
+                        ing.setId(ingDto.getId());
+                        ing.setName(ingDto.getName());
+                        ing.setQuantity(ingDto.getQuantity());
+                        ing.setNutrition(ingDto.getNutrition());
+                        ing.setCategory(ingDto.getCategory());
+                        ing.setRecipe(recipe);
+                        return ing;
+                    })
+                    .collect(Collectors.toList());
+            recipe.setIngredients(ingredients);
+        }
 
-
+        return recipe;
     }
 }
-
-
