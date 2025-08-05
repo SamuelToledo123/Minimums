@@ -17,7 +17,7 @@ public class JwtService {
     @Value("${spring.security.jwt.secret}")
     private String SECRET_KEY;
 
-    public String generateToken(UserDetails userDetails) {
+    private String generateToken(UserDetails userDetails, long expirationMillis) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("authorities", userDetails.getAuthorities());
 
@@ -25,10 +25,19 @@ public class JwtService {
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
+
+    public String generateAccessToken(UserDetails userDetails) {
+        return generateToken(userDetails, 1000 * 60 * 25); // 25 min
+    }
+
+    public String generateRefreshToken(UserDetails userDetails) {
+        return generateToken(userDetails, 1000L * 60 * 60 * 24 * 2); // 2 dagar
+    }
+
 
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();

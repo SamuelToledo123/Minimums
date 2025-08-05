@@ -1,5 +1,6 @@
 package se.samuel.minimums.AppUser.Controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -17,7 +18,7 @@ public class RegistrationController {
     private final RegistrationService registrationService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody RegistrationRequestDto request) {
+    public ResponseEntity<String> registerUser(@Valid @RequestBody RegistrationRequestDto request) {
         return registrationService.registerUser(request);
     }
 
