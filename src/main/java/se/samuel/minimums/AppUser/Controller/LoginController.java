@@ -32,8 +32,36 @@ public class LoginController {
         );
 
         UserDetails user = userDetailsService.loadUserByUsername(request.getEmail());
-        String jwt = jwtService.generateToken(user);
 
-        return ResponseEntity.ok(Map.of("token", jwt));
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+
+        return ResponseEntity.ok(Map.of(
+                "accessToken", accessToken,
+                "refreshToken", refreshToken
+        ));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
+        String refreshToken = request.get("refreshToken");
+
+        if (refreshToken == null || refreshToken.isBlank()) {
+            return ResponseEntity.badRequest().body("Missing refresh token");
+        }
+
+        try {
+            String username = jwtService.extractUsername(refreshToken);
+            UserDetails user = userDetailsService.loadUserByUsername(username);
+
+            if (!jwtService.validateToken(refreshToken, user)) {
+                return ResponseEntity.status(403).body("Invalid refresh token");
+            }
+
+            String newAccessToken = jwtService.generateAccessToken(user);
+            return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
+        } catch (Exception e) {
+            return ResponseEntity.status(403).body("Invalid or expired refresh token");
+        }
     }
 }
